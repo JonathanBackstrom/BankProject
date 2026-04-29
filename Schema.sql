@@ -1,0 +1,7 @@
+CREATE TABLE users (
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    card_number VARCHAR(20) NOT NULL UNIQUE,
+    pin_hash VARCHAR(60) NOT NULL,
+    name VARCHAR(156) NOT NULL,
+    role VARCHAR(56) NOT NULL DEFAULT 'user'
+);
