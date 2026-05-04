@@ -5,7 +5,15 @@ define('BASE_URL', '/BankProject/public');
 session_start();
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST'){
+    $card = $_POST["card_number"] ?? '';
+    $pin = $_POST["pin"] ?? '';
 }
+
+$error = "";
+if ($card === '' || $pin === '')
+    {
+        $error = "Please enter correct number/pin";
+    }
 
 $page = $_GET['page'] ?? 'login';
 

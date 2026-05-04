@@ -14,6 +14,12 @@
         <input type="text" name="card_number" placeholder="Cardnumber">
         <input type="password" name="pin" placeholder="PIN">
         <button type="submit">Log in</button>
+        <?php 
+        if ($error !== '') 
+        {
+            echo htmlspecialchars($error);
+        }
+         ?>
         </form>
         </div>
     </div>

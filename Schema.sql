@@ -1,4 +1,4 @@
-*9CREATE TABLE users (
+CREATE TABLE users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     card_number VARCHAR(20) NOT NULL UNIQUE,
     pin_hash VARCHAR(60) NOT NULL,
