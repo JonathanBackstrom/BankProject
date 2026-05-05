@@ -13,6 +13,7 @@
         <form method="post">
         <input type="text" name="card_number" placeholder="Cardnumber">
         <input type="password" name="pin" placeholder="PIN">
+        <input type="hidden" name="action" value="login">
         <button type="submit">Log in</button>
         <?php 
         if ($error !== '') 

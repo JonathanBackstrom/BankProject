@@ -5,6 +5,7 @@ declare(strict_types=1);
 class UserRepository
 {
     private PDO $pdo;
+    
     function __construct(PDO $pdo)
     {
         $this->pdo = $pdo;
