@@ -13,5 +13,6 @@ require_role('admin');
 <body>
     <h1>Admin panel - Welcome <?= $_SESSION['user_name'] ?>!</h1>
     <a href="?page=logout">Logga ut</a>
+    <?php require __DIR__ . '/../Admin/admin-navbar.php'; ?>
 </body>
 </html>

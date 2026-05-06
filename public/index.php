@@ -34,6 +34,8 @@ $authService = new AuthService($userRepo);
 session_start();
 
 $error = "";
+$success = "";
+$success = $_GET['success'] ?? '';
 
 $page = $_GET['page'] ?? 'login';
 if ($page !== 'login' && $page !== 'logout') {
@@ -75,14 +77,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
     }
     
-    if ($action === 'deposit' && isset($loggedInUser)) {
-        // deposit logik
-        $amount = (float) $_POST['amount'] ?? 0;
-        $account_id = $loggedInUser['id'];
-        $transactService->deposit($account_id, $amount);
-        header('Location: ?page=dashboard');
-        exit;
-    }
+    // deposit logik
+    if ($action === 'deposit' && isset($loggedInUser))
+        {
+            $amount = (float) $_POST['amount'] ?? 0;
+            $account_id = $loggedInUser['id'];
+            $transactService->deposit($account_id, $amount);
+            header('Location: ?page=dashboard&success=deposit');
+            exit;
+            }
+            
+
+    // withdraw logik
+    if ($action === 'withdraw' && isset($loggedInUser))
+        {
+            $amount = (float) $_POST['amount'] ?? 0;
+            $account_id = $loggedInUser['id'];
+            $balance = (float) $loggedInUser['balance'];
+            if($transactService->withdraw($account_id, $amount, $balance))
+                {
+                    header('Location: ?page=dashboard&success=withdraw');
+                    exit;
+                }
+            else
+                {
+                    $error = "Insufficient funds";
+                }
+        }
 }
 
 match($page) {
