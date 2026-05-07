@@ -1,7 +1,10 @@
 <?php
 declare(strict_types=1);
 define('BASE_URL', '/BankProject/public');
-
+//Entities
+require __DIR__ . '/../src/Domain/Entities/User.php';
+require __DIR__ . '/../src/Domain/Entities/Account.php';
+require __DIR__ . '/../src/Domain/Entities/Transaction.php';
 //Infra
 require __DIR__ . '/../src/Infrastructure/Database/Database.php';
 //Repo
@@ -38,65 +41,81 @@ $success = "";
 $success = $_GET['success'] ?? '';
 
 $page = $_GET['page'] ?? 'login';
-if ($page !== 'login' && $page !== 'logout') {
-    require_login();
-}
+if ($page !== 'login' && $page !== 'logout')
+    {
+        require_login();
+    }
+
 if (isset($_SESSION['user_id']))
     {
         $user_id = $_SESSION['user_id'];
         $loggedInUser = $accountService->getInfo($user_id);
+        $userAccounts = $accountService->getAccounts($user_id);
+        
+        $selectedAccount = null;
+        
+    }
+
+if (isset($_GET['account_id']))
+    {
+        $_SESSION['account_id'] = (int) $_GET['account_id'];
+    }
+if (isset($_SESSION['account_id']))
+    {   
+        $selectedAccount = $accountService->getAccountById($_SESSION['account_id']);
     }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST')
-{
-    $card = $_POST["card_number"] ?? '';
-    $pin = $_POST["pin"] ?? '';
-    $action = $_POST["action"] ?? '';
+    {
+        $card = $_POST["card_number"] ?? '';
+        $pin = $_POST["pin"] ?? '';
+        $action = $_POST["action"] ?? '';
     
-    if ($action === 'login') {
-        // login logik
-        if ($card === '' || $pin === '')
-        {
-            $error = "Please enter correct number/pin";
-        }
+        if ($action === 'login') {
+            // login logik
+            if ($card === '' || $pin === '')
+            {
+                $error = "Please enter correct number/pin";
+            }
        
         $result = $authService->logIn($card, $pin);
-        if($result)
-        {
-            if($_SESSION['role'] === 'admin')
-                {
-                    header('Location: ?page=admin');
-                    exit;
-                }
-                else
+            if($result)
+            {
+                if($_SESSION['role'] === 'admin')
+                    {
+                        header('Location: ?page=admin');
+                        exit;
+                    }
+                    else
                     {
                         header('Location: ?page=dashboard');
                         exit;
                     }
-
         }
     }
-    
+
     // deposit logik
-    if ($action === 'deposit' && isset($loggedInUser))
+    if ($action === 'deposit' && isset($selectedAccount))
         {
             $amount = (float) $_POST['amount'] ?? 0;
-            $account_id = $loggedInUser['id'];
+            $account_id = $selectedAccount->getId();
             $transactService->deposit($account_id, $amount);
-            header('Location: ?page=dashboard&success=deposit');
+            $_SESSION['flash'] = 'Deposit was successful!';
+            header('Location: ?page=deposit');
             exit;
             }
             
 
     // withdraw logik
-    if ($action === 'withdraw' && isset($loggedInUser))
+    if ($action === 'withdraw' && isset($selectedAccount))
         {
             $amount = (float) $_POST['amount'] ?? 0;
-            $account_id = $loggedInUser['id'];
-            $balance = (float) $loggedInUser['balance'];
+            $account_id = $selectedAccount->getId();
+            $balance = (float) $selectedAccount->getBalance();
             if($transactService->withdraw($account_id, $amount, $balance))
                 {
-                    header('Location: ?page=dashboard&success=withdraw');
+                    $_SESSION['flash'] = 'Withdraw was successful!';
+                    header('Location: ?page=withdraw');
                     exit;
                 }
             else
@@ -111,6 +130,9 @@ match($page) {
     'dashboard' => require __DIR__ . '/../templates/dashboard.php',
     'admin' => require __DIR__ . '/../templates/Admin/admin.php',
     'logout' => require __DIR__ . '/../templates/logout.php',
+    'account' => require __DIR__ . '/../templates/account.php',
+    'deposit' => require __DIR__ . '/../templates/deposit.php',
+    'withdraw' => require __DIR__ . '/../templates/withdraw.php',
     default => require __DIR__ . '/../templates/login.php',
 };
 ?>

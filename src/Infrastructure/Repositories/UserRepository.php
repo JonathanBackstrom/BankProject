@@ -15,7 +15,18 @@ class UserRepository
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE card_number = ?");
         $stmt->execute([$card_number]);
-        return $stmt->fetch(); 
+        
+        $row = $stmt->fetch();
+        if (!$row) return null;
+
+        return new User(
+        $row['id'],
+        $row['card_number'],
+        $row['pin_hash'],
+        $row['name'],
+        $row['role'],
+        new DateTime($row['created_at'])
+        );
     }
 
 }

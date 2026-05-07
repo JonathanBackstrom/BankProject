@@ -12,13 +12,17 @@ class AccountService
 
     public function getInfo(int $user_id)
     {
-        $account = $this->repo->getAccount($user_id);
-        if ($account === null)
-            {
-                return false;
-            }
-        
-        return $account;
+        return $this->repo->getAccount($user_id);
+    }
+
+    public function getAccounts(int $user_id)
+    {
+        return $this->repo->getAccounts($user_id);
+    }
+
+    public function getAccountById(int $account_id)
+    {
+        return $this->repo->getAccountById((int)$account_id);
     }
 }
 

@@ -17,14 +17,14 @@ class AuthService
         {
             return false;
         }
-        if(!password_verify($pin, $user['pin_hash']))
+        if(!password_verify($pin, $user->getPin()))
         {
             return false;
         }
 
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
-        $_SESSION['role'] = $user['role'];
+        $_SESSION['user_id'] = $user->getId();
+        $_SESSION['user_name'] = $user->getName();
+        $_SESSION['role'] = $user->getRole();
         return true;
     }
 }
