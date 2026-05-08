@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 class AuthService
 {
-    private UserRepository $repo;
-    function __construct(UserRepository $repo)
+    private UserRepositoryInterface $repo;
+    function __construct(UserRepositoryInterface $repo)
     {
         $this->repo = $repo;
     }

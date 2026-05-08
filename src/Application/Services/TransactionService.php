@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 class TransactionService
 {
-    private TransactionRepository $repo;
-    function __construct(TransactionRepository $repo)
+    private TransactRepositoryInterface $repo;
+
+    function __construct(TransactRepositoryInterface $repo)
     {
         $this->repo = $repo;
     }

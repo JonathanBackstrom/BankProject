@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class UserRepository
+class UserRepository implements UserRepositoryInterface
 {
     private PDO $pdo;
     
@@ -11,7 +11,7 @@ class UserRepository
         $this->pdo = $pdo;
     }
 
-    public function getUser (string $card_number)
+    public function getUser (string $card_number): ?User
     {
         $stmt = $this->pdo->prepare("SELECT * FROM users WHERE card_number = ?");
         $stmt->execute([$card_number]);

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 class AccountService
 {
-    private AccountRepository $repo;
-    function __construct(AccountRepository $repo)
+    private AccountRepositoryInterface $repo;
+    
+    function __construct(AccountRepositoryInterface $repo)
     {
         $this->repo = $repo;
     }

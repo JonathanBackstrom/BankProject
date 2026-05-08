@@ -1,6 +1,13 @@
 <?php
 declare(strict_types=1);
 define('BASE_URL', '/BankProject/public');
+
+//Interfaces
+require __DIR__ . '/../src/Domain/Interfaces/UserRepositoryInterface.php';
+require __DIR__ . '/../src/Domain/Interfaces/AccountRepositoryInterface.php';
+require __DIR__ . '/../src/Domain/Interfaces/TransactRepositoryInterface.php';
+
+
 //Entities
 require __DIR__ . '/../src/Domain/Entities/User.php';
 require __DIR__ . '/../src/Domain/Entities/Account.php';
@@ -49,8 +56,7 @@ if ($page !== 'login' && $page !== 'logout')
 if (isset($_SESSION['user_id']))
     {
         $user_id = $_SESSION['user_id'];
-        $loggedInUser = $accountService->getInfo($user_id);
-        $userAccounts = $accountService->getAccounts($user_id);
+        $userAccounts = $accountService->getAccounts($user_id) ?? [];
         
         $selectedAccount = null;
         
@@ -123,6 +129,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                     $error = "Insufficient funds";
                 }
         }
+    
+    //transfer logik
+    if ($action === 'transfer' && isset($selectedAccount))
+        {
+            $amount = (float) $_POST['amount'] ?? 0;
+            $to_account_id = (int) $_POST['to_account_id'] ?? 0;
+            $from_account_id = $selectedAccount->getId();
+            $balance = (float) $selectedAccount->getBalance();
+            if ($transactService->transfer($from_account_id, $to_account_id, $amount, $balance))
+                {
+                    $_SESSION['flash'] = 'Transfer was successful!';
+                    header('Location: ?page=transfer');
+                    exit;
+                }
+            else
+                {
+                    $error = "Insufficient funds";
+                }
+            
+        }
 }
 
 match($page) {
@@ -133,6 +159,7 @@ match($page) {
     'account' => require __DIR__ . '/../templates/account.php',
     'deposit' => require __DIR__ . '/../templates/deposit.php',
     'withdraw' => require __DIR__ . '/../templates/withdraw.php',
+    'transfer' => require __DIR__ . '/../templates/transfer.php',
     default => require __DIR__ . '/../templates/login.php',
 };
 ?>

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class TransactionRepository
+class TransactionRepository implements TransactRepositoryInterface
 {
 private PDO $pdo;
 
@@ -11,7 +11,7 @@ private PDO $pdo;
         $this->pdo = $pdo;
     }
 
-    public function deposit(int $account_id, float $amount)
+    public function deposit(int $account_id, float $amount) : void
     {
         try
         {
@@ -30,7 +30,7 @@ private PDO $pdo;
             }
     }
 
-    public function withdraw(int $account_id, float $amount)
+    public function withdraw(int $account_id, float $amount) : void
     {
         try
         {
@@ -48,7 +48,7 @@ private PDO $pdo;
         }
     }
 
-    public function transfer(int $from_account_id,int $to_account_id, float $amount)
+    public function transfer(int $from_account_id,int $to_account_id, float $amount) : void
     {
         try
         {

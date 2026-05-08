@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-class AccountRepository
+class AccountRepository implements AccountRepositoryInterface
 {
 private PDO $pdo;
 
@@ -11,13 +11,13 @@ private PDO $pdo;
         $this->pdo = $pdo;
     }
 
-    public function getAccount(int $user_id)
+    public function getAccount(int $user_id) : ?Account
     {
         $stmt = $this->pdo->prepare("SELECT * FROM accounts WHERE user_id = ?");
         $stmt->execute([$user_id]);
 
         $row = $stmt->fetch();
-        if(!$row) return false;
+        if(!$row) return null;
 
         return new Account(
             $row['id'],
@@ -28,13 +28,13 @@ private PDO $pdo;
         );
     }
 
-    public function getAccounts(int $user_id)
+    public function getAccounts(int $user_id) : ?array
     {
         $stmt = $this->pdo->prepare("SELECT * FROM accounts WHERE user_id = ?");
         $stmt->execute([$user_id]);
 
         $accountList = $stmt->fetchAll();
-        if (!$accountList) return false;
+        if (!$accountList) return null;
         $accounts = [];
         foreach ($accountList as $list)
             {
@@ -49,13 +49,13 @@ private PDO $pdo;
         return $accounts;
     }
 
-    public function getAccountById(int $account_id)
+    public function getAccountById(int $account_id) : ?Account
     {
         $stmt = $this->pdo->prepare("SELECT * FROM accounts WHERE id = ?");
         $stmt->execute([$account_id]);
 
         $account = $stmt->fetch();
-        if (!$account) return false;
+        if (!$account) return null;
         return new Account(
             $account['id'],
             $account['user_id'],
