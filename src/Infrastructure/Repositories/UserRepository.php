@@ -29,6 +29,27 @@ class UserRepository implements UserRepositoryInterface
         );
     }
 
+    public function findAll(): ?array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM  users");
+        $stmt->execute();
+
+        $usersList =$stmt->fetchAll();
+        if (!$usersList) return null;
+        $users = [];
+        foreach ($usersList as $list)
+            {
+                $users[] = new User(
+                    $list['id'],
+                    $list['card_number'],
+                    $list['pin_hash'],
+                    $list['name'],
+                    $list['role'],
+                    new DateTime($list['created_at'])
+                    );
+            }
+        return $users;                    
+    }
 }
 
 ?>

@@ -13,7 +13,8 @@
     <h2><?= $selectedAccount->getAccountType() ?></h2>
     <p>Balance: <?= $selectedAccount->getBalance() ?> </p>
     
-    <form method="post">
+    <form  method="post">
+        <?= csrf_field() ?>
         <label for="">How much do you want to withdraw</label>
         <input type="hidden" name="action" value="withdraw">
         <input type="text" name="amount">

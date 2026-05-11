@@ -11,6 +11,7 @@
         <div class="login-box">
             <H1>Bank</H1>
         <form method="post">
+        <?= csrf_field() ?> //Egentligen inget skydd för användaren inte har en session än.
         <input type="text" name="card_number" placeholder="Cardnumber">
         <input type="password" name="pin" placeholder="PIN">
         <input type="hidden" name="action" value="login">
