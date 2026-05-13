@@ -91,8 +91,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         $pin = $_POST["pin"] ?? '';
         $action = $_POST["action"] ?? '';
     
+        // login logik
         if ($action === 'login') {
-            // login logik
             if ($card === '' || $pin === '')
             {
                 $error = "Please enter correct number/pin";

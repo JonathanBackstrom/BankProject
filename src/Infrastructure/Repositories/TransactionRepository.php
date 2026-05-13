@@ -13,9 +13,9 @@ private PDO $pdo;
 
     public function deposit(int $account_id, float $amount) : void
     {
+        $this->pdo->beginTransaction();
         try
         {
-            $this->pdo->beginTransaction();
             $stmt = $this->pdo->prepare("UPDATE accounts SET balance = balance + ? WHERE id = ?");
             $stmt->execute([$amount, $account_id]);
             $stmt = $this->pdo->prepare("INSERT INTO transactions (to_account_id, type, amount) VALUES (?, ?, ?)");
@@ -25,16 +25,16 @@ private PDO $pdo;
             }
             catch (Exception $ex)
             {
-                $this->pdo->rollback();
+                $this->pdo->rollBack();
                 throw $ex;
             }
     }
 
     public function withdraw(int $account_id, float $amount) : void
     {
+        $this->pdo->beginTransaction();
         try
         {
-            $this->pdo->beginTransaction();
             $stmt = $this->pdo->prepare("UPDATE accounts SET balance = balance - ? WHERE id = ?");
             $stmt->execute([$amount, $account_id]);
             $stmt = $this->pdo->prepare("INSERT INTO transactions (from_account_id, type, amount) VALUES (?, ?, ?)");
@@ -50,9 +50,9 @@ private PDO $pdo;
 
     public function transfer(int $from_account_id,int $to_account_id, float $amount) : void
     {
+        $this->pdo->beginTransaction();
         try
         {
-        $this->pdo->beginTransaction();
         $stmt = $this->pdo->prepare("UPDATE accounts SET balance = balance - ? WHERE id = ?");
         $stmt->execute([$amount, $from_account_id]);
         $stmt = $this->pdo->prepare("UPDATE accounts SET balance = balance + ? WHERE id = ?");
