@@ -7,8 +7,8 @@
 </head>
 <body>
     <?php if ($selectedAccount): ?>
-    <h2><?= $selectedAccount->getAccountType() ?></h2>
-    <p>Balance: <?= $selectedAccount->getBalance() ?> </p>
+    <h2><?= htmlspecialchars($selectedAccount->getAccountType()) ?></h2>
+    <p>Balance: <?= htmlspecialchars($selectedAccount->getBalance()) ?> </p>
     <?php else: ?>
         <p>No account selected. Go back to home and selcet an account.</p>
         <?php endif; ?>

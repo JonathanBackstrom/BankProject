@@ -61,44 +61,56 @@ $error = "";
 $success = "";
 $success = $_GET['success'] ?? '';
 
+//skyddar alla sidor från obehörig åtkomst
 $page = $_GET['page'] ?? 'login';
+
+//Undantar login för att inte hamna i login-loop, undantar logout för att kunna komma åt lougout logiken
 if ($page !== 'login' && $page !== 'logout')
     {
         require_login();
     }
 
+// kontrollerar så det finns ett user_id i sessionen, hämtar sedan accounts bundet till user_id.
+// Sätter även selectedAccount till null som standard för att man än inte valt konto.
 if (isset($_SESSION['user_id']))
     {
         $user_id = $_SESSION['user_id'];
         $userAccounts = $accountService->getAccounts($user_id) ?? [];
         
         $selectedAccount = null;
-        
     }
 
+// När användaren klickar på ett konto så sparas id på kontot i session
 if (isset($_GET['account_id']))
     {
         $_SESSION['account_id'] = (int) $_GET['account_id'];
     }
+
+// Hämtar kontot från databasen och sätter det till selectedAccount
 if (isset($_SESSION['account_id']))
     {   
         $selectedAccount = $accountService->getAccountById($_SESSION['account_id']);
     }
 
+// Kontrollerar att POST skickas och läser då in datan som skickats
 if ($_SERVER['REQUEST_METHOD'] === 'POST')
     {
         $card = $_POST["card_number"] ?? '';
         $pin = $_POST["pin"] ?? '';
         $action = $_POST["action"] ?? '';
     
-        // login logik
-        if ($action === 'login') {
+        // login logik, använder 'action' för att visa vilket formulär som skickats
+        if ($action === 'login')
+            {
+                //validering för log in
             if ($card === '' || $pin === '')
             {
                 $error = "Please enter correct number/pin";
             }
-       
+            //loggas in med metod.
         $result = $authService->logIn($card, $pin);
+       
+            //beroende på roll vart man hamnar
             if($result)
             {
                 if($_SESSION['role'] === 'admin')
@@ -114,7 +126,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
     }
 
-    // deposit logik
+    // Deposit logik, använder 'action' för att visa vilket formulär som skickats
+    // Med isset validering mot selectAccount för att det inte ska krascha när man hämtar id
+    // Använder mig av flash för att få ett 'pop up' meddelande som försvinner när man går vidare.
     if ($action === 'deposit' && isset($selectedAccount))
         {
             csrf_verify();
@@ -127,7 +141,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             }
             
 
-    // withdraw logik
+    // Withdraw logik, använder 'action' för att visa vilket formulär som skickats
+    // Med isset validering mot selectAccount för att det inte ska krascha när man hämtar id
+    // Kontrollerar med if sats mot withdraw() ifall det lyckades eller inte.
     if ($action === 'withdraw' && isset($selectedAccount))
         {
             csrf_verify();
@@ -146,7 +162,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
                 }
         }
     
-    //transfer logik
+    //transfer logik, använder 'action' för att visa vilket formulär som skickats
+    // Med isset validering mot selectAccount för att det inte ska krascha när man hämtar id
+    // Kontrollerar med if sats mot tranfser() ifall det lyckades eller inte.
     if ($action === 'transfer' && isset($selectedAccount))
         {
             csrf_verify();
@@ -168,6 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
         }
 }
 
+//Routing
 match($page) {
     'login' => require __DIR__ . '/../templates/login.php',
     'dashboard' => require __DIR__ . '/../templates/dashboard.php',
@@ -179,7 +198,7 @@ match($page) {
     'transfer' => require __DIR__ . '/../templates/transfer.php',
     'users' => require __DIR__ . '/../templates/Admin/admin-users.php',
     'transaction' => require __DIR__ . '/../templates/Admin/admin-transactions.php',
-    'accounts' => require __DIR__ . '/../templates/Admin/admin-account.php',
+    'accounts' => require __DIR__ . '/../templates/Admin/admin-accounts.php',
     default => require __DIR__ . '/../templates/login.php',
 };
 ?>

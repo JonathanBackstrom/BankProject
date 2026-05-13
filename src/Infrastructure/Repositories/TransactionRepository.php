@@ -70,7 +70,7 @@ private PDO $pdo;
 
     public function findAll(): ?array
     {
-        $stmt = $this->pdo->prepare("SELECT * FROM transaction");
+        $stmt = $this->pdo->prepare("SELECT * FROM transactions");
         $stmt->execute();
 
         $transactList = $stmt->fetchAll();

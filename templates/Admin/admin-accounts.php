@@ -36,5 +36,6 @@ require_role('admin');
                 </tbody>
             </table>
     </div>
+    <?php require __DIR__ . '/../Admin/admin-navbar.php'; ?>
 </body>
 </html>

@@ -38,8 +38,7 @@ require_role('admin');
                         <?php endforeach; ?>
                 </tbody>
             </table>
-                
-                
     </div>
+    <?php require __DIR__ . '/../Admin/admin-navbar.php'; ?>
 </body>
 </html>
