@@ -1,4 +1,4 @@
-CREATE TABLE users (
+CREATE TABLE IF NOT EXISTS users (
     id INT PRIMARY KEY AUTO_INCREMENT,
     card_number VARCHAR(20) NOT NULL UNIQUE,
     pin_hash VARCHAR(60) NOT NULL,
@@ -7,7 +7,7 @@ CREATE TABLE users (
     created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
-CREATE TABLE accounts (
+CREATE TABLE IF NOT EXISTS accounts (
     id INT PRIMARY KEY AUTO_INCREMENT,
     user_id INT NOT NULL,
     account_type VARCHAR(156) NOT NULL DEFAULT 'checking',
@@ -16,7 +16,7 @@ CREATE TABLE accounts (
     FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
-CREATE TABLE transactions (
+CREATE TABLE IF NOT EXISTS transactions (
     id INT PRIMARY KEY AUTO_INCREMENT,
     from_account_id INT,
     to_account_id INT,

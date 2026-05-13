@@ -41,7 +41,7 @@ $transactRepo = new TransactionRepository($pdo);
 $accountService = new AccountService($accountRepo);
 $transactService = new TransactionService($transactRepo);
 $authService = new AuthService($userRepo);
-$adminService = new AdminService($userRepo);
+$adminService = new AdminService($userRepo, $accountRepo, $transactRepo);
 
 //sätter lokalt, hade varit i php.ini för produktion
 session_set_cookie_params([

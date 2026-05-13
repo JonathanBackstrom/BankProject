@@ -66,7 +66,30 @@ private PDO $pdo;
             $this->pdo->rollBack();
             throw $ex;
         }
+    }
 
+    public function findAll(): ?array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM transaction");
+        $stmt->execute();
+
+        $transactList = $stmt->fetchAll();
+        if (!$transactList) return null;
+
+        $transactions = [];
+        foreach ($transactList as $list)
+            {
+                $transactions[] = new Transaction(
+                    $list['id'],
+                    (int)$list['from_account_id'],
+                    (int)$list['to_account_id'],
+                    $list['type'],
+                    (float)$list['amount'],
+                    new DateTime($list['created_at'])
+                );
+            }
+
+            return $transactions;
     }
 }
 

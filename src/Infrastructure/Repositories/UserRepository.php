@@ -34,7 +34,7 @@ class UserRepository implements UserRepositoryInterface
         $stmt = $this->pdo->prepare("SELECT * FROM  users");
         $stmt->execute();
 
-        $usersList =$stmt->fetchAll();
+        $usersList = $stmt->fetchAll();
         if (!$usersList) return null;
         $users = [];
         foreach ($usersList as $list)

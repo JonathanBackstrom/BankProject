@@ -7,6 +7,8 @@ interface AccountRepositoryInterface
     public function getAccounts(int $user_id): ?array;
     
     public function getAccountById(int $account_id): ?Account;
+
+    public function findAll() : ?array;
 }
 
 ?>

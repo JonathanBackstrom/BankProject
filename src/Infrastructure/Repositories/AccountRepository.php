@@ -64,6 +64,30 @@ private PDO $pdo;
             new DateTime($account['created_at'])
         );
     }
+
+    public function findAll(): ?array
+    {
+        $stmt = $this->pdo->prepare("SELECT * FROM accounts");
+        $stmt->execute();
+
+        $accountList = $stmt->fetchAll();
+        if (!$accountList) return null;
+
+        $accounts = [];
+
+        foreach ($accountList as $account)
+            {
+                $accounts[] = new Account(
+                    $account['id'],
+                    $account['user_id'],
+                    $account['account_type'],
+                    (float)$account['balance'],
+                    new DateTime($account['created_at'])
+                );
+            }
+
+            return $accounts;
+    }
 }
 
 ?>
