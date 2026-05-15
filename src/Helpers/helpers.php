@@ -3,11 +3,13 @@ declare(strict_types=1);
     
     function require_login() : void
     {
+        check_idle_timeout(1);
+
         if (!isset($_SESSION['user_id']))
-            {
-                header('Location: ?page=login');
-                exit;
-            }
+        {
+            header('Location: ?page=login');
+            exit;
+        }
     }
 
     function require_role(string $role)
@@ -39,7 +41,7 @@ declare(strict_types=1);
     }
 
     function csrf_verify(): void
-     {
+    {
         $token = $_POST['csrf_token'] ?? '';
 
         if (!hash_equals(csrf_token(), $token))
@@ -50,5 +52,27 @@ declare(strict_types=1);
             }
 
         unset($_SESSION['csrf_token']);
-}
+    }
+
+    // Timear ut ifall man inte är aktiv på sidan
+    function check_idle_timeout(int $minutes): void
+    {
+        // kollar så man är inloggad
+        if (!isset($_SESSION['user_id'])) return;
+
+        // skapar variabel som senast aktiv
+        $lastActive = $_SESSION['last_active'] ?? 0;
+
+        // förstör sessionen och kastar ut användaren ifall man inte varit aktiv efter viss tid.
+        if (time() - $lastActive > $minutes * 60)
+            {
+                session_unset();
+                session_destroy();
+                setcookie(session_name(), '', time() - 3600, '/');
+                header("location: ?page=login&reason=timeout");
+                exit;
+            }
+            // uppdaterar till ny tid
+            $_SESSION['last_active'] = time();
+    }
 ?>

@@ -12,6 +12,7 @@ class AuthService
 
     public function logIn(string $card_number, string $pin)
     {
+
         $user = $this->repo->getUser($card_number);
         if ($user === null)
         {
@@ -25,6 +26,9 @@ class AuthService
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_name'] = $user->getName();
         $_SESSION['role'] = $user->getRole();
+
+        $_SESSION['last_active'] = time();
+        
         return true;
     }
 }

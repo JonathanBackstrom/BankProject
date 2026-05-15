@@ -7,7 +7,6 @@ require __DIR__ . '/../src/Domain/Interfaces/UserRepositoryInterface.php';
 require __DIR__ . '/../src/Domain/Interfaces/AccountRepositoryInterface.php';
 require __DIR__ . '/../src/Domain/Interfaces/TransactRepositoryInterface.php';
 
-
 //Entities
 require __DIR__ . '/../src/Domain/Entities/User.php';
 require __DIR__ . '/../src/Domain/Entities/Account.php';
@@ -134,10 +133,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             csrf_verify();
             $amount = (float) $_POST['amount'] ?? 0;
             $account_id = $selectedAccount->getId();
-            $transactService->deposit($account_id, $amount);
-            $_SESSION['flash'] = 'Deposit was successful!';
-            header('Location: ?page=deposit');
-            exit;
+            if ($transactService->deposit($account_id, $amount))
+                {
+                    $_SESSION['flash'] = 'Deposit was successful!';
+                    header('Location: ?page=deposit');
+                    exit;
+                }
+                else
+                    {
+                        $error = "Invalid amount";
+                    }
             }
             
 
