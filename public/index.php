@@ -42,9 +42,9 @@ $transactService = new TransactionService($transactRepo);
 $authService = new AuthService($userRepo);
 $adminService = new AdminService($userRepo, $accountRepo, $transactRepo);
 
-//sätter lokalt, hade varit i php.ini för produktion
+//sätter lokalt, hade varit i php.ini för produktion, satt lifetime till en timme, men är man idle i 10 minuter kastas man ut.
 session_set_cookie_params([
-    'lifetime' => 0,
+    'lifetime' => 3600,
     'path' => '/',
     'secure' => false,
     'httponly' => true,

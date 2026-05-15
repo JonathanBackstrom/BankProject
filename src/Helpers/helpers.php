@@ -3,7 +3,7 @@ declare(strict_types=1);
     
     function require_login() : void
     {
-        check_idle_timeout(1);
+        check_idle_timeout(10);
 
         if (!isset($_SESSION['user_id']))
         {
