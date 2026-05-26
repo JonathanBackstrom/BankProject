@@ -23,6 +23,9 @@ class AuthService
             return false;
         }
 
+        // byter sessions id vid inloggnig så att gamla blir ogiltigt.
+        session_regenerate_id(true);
+
         $_SESSION['user_id'] = $user->getId();
         $_SESSION['user_name'] = $user->getName();
         $_SESSION['role'] = $user->getRole();

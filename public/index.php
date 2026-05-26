@@ -51,7 +51,9 @@ session_set_cookie_params([
     'samesite' => 'Strict',
 ]);
 
+// Säkrar upp så att sessionens id inte läcker genom url.
 ini_set('session.use_only_cookies', '1');
+// Skyddat mot attacker och tillåter bara sessions id:n som den själv skapat.
 ini_set('session.use_strict_mode', '1');
 
 session_start();
@@ -89,6 +91,13 @@ if (isset($_GET['account_id']))
 if (isset($_SESSION['account_id']))
     {   
         $selectedAccount = $accountService->getAccountById($_SESSION['account_id']);
+        
+        // kontrollerar så att kontot man hämtar verkligen tillhör användaren.
+        if ($selectedAccount?->getUserId() !== $user_id)
+            {
+                $selectedAccount = null;
+                unset($_SESSION['account_id']);
+            }
     }
 
 // Kontrollerar att POST skickas och läser då in datan som skickats
@@ -177,17 +186,33 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             $to_account_id = (int) $_POST['to_account_id'] ?? 0;
             $from_account_id = $selectedAccount->getId();
             $balance = (float) $selectedAccount->getBalance();
-            if ($transactService->transfer($from_account_id, $to_account_id, $amount, $balance))
+
+            $validAccount = false;
+            foreach ( $userAccounts as $account)
                 {
-                    $_SESSION['flash'] = 'Transfer was successful!';
-                    header('Location: ?page=transfer');
-                    exit;
+                    if ($account->getId() === $to_account_id)
+                        {
+                            $validAccount = true;
+                            break;
+                        }
                 }
-            else
+            if (!$validAccount)
                 {
-                    $error = "Insufficient funds";
+                    $error = "Invalid account";
                 }
-            
+                else
+                {
+                        if ($transactService->transfer($from_account_id, $to_account_id, $amount, $balance))
+                        {
+                            $_SESSION['flash'] = 'Transfer was successful!';
+                            header('Location: ?page=transfer');
+                            exit;
+                        }
+                        else
+                        {
+                            $error = "Insufficient funds";
+                        }
+                }
         }
 }
 

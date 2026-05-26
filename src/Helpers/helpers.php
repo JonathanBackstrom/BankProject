@@ -47,7 +47,7 @@ declare(strict_types=1);
         if (!hash_equals(csrf_token(), $token))
              {
                 http_response_code(403);
-                echo "<h1>403 – Ogiltig CSRF-token< h1>";
+                echo "<h1>403 – Ogiltig CSRF-token<h1>";
                 exit;
             }
 

@@ -11,14 +11,14 @@ declare(strict_types=1);
 </head>
 <body>
     <div class="wrapper">
-    <h1>Welcome <?= $_SESSION['user_name'] ?>!</h1>
+    <h1>Welcome <?= htmlspecialchars($_SESSION['user_name']) ?>!</h1>
     <a href="?page=logout">Logga ut</a>
     <?php require __DIR__ . '/../templates/navbar.php'; ?>
     
     <?php foreach ($userAccounts as $account): ?>
         <div class="account-item">
-        <a href="?page=account&account_id=<?= $account->getId() ?>">
-        <?= $account->getAccountType() ?>
+        <a href="?page=account&account_id=<?= htmlspecialchars($account->getId()) ?>">
+        <?= htmlspecialchars($account->getAccountType()) ?>
         </a>
         </div>
     <?php endforeach; ?>
