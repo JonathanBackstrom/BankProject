@@ -11,7 +11,7 @@
     <?php if ($selectedAccount): ?>
         
     <h2><?= htmlspecialchars($selectedAccount->getAccountType()) ?></h2>
-    <p>Balance: <?= htmlspecialchars($selectedAccount->getBalance()) ?> </p>
+    <p>Balance: <?= htmlspecialchars((string)$selectedAccount->getBalance()) ?> </p>
     
     <form  method="post">
         <?= csrf_field() ?>

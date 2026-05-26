@@ -1,5 +1,5 @@
 <?php
-
+declare(strict_types=1);
 require_login();
 require_role('admin');
 
@@ -28,11 +28,11 @@ require_role('admin');
                         <?php $transactions = $adminService->getAllTransactions() ?? []; ?>
                         <?php foreach ($transactions as $tran): ?>
                             <tr>
-                                <td><?= htmlspecialchars($tran->getId()) ?></td>
-                                <td><?= htmlspecialchars($tran->getFromAccountId()) ?></td>
-                                <td><?= htmlspecialchars($tran->getToAccountId()) ?></td>
+                                <td><?= htmlspecialchars((string)$tran->getId()) ?></td>
+                                <td><?= $tran->getFromAccountId() !== null ? htmlspecialchars((string)$tran->getFromAccountId()) : '-' ?></td>
+                                <td><?= $tran->getToAccountId() !== null ? htmlspecialchars((string)$tran->getToAccountId()) : '-' ?></td>
                                 <td><?= htmlspecialchars($tran->getType()) ?></td>
-                                <td><?= htmlspecialchars($tran->getAmount()) ?></td>
+                                <td><?= htmlspecialchars((string)$tran->getAmount()) ?></td>
                                 <td><?= htmlspecialchars($tran->getCreatedAt()->format('Y-m-d')) ?></td>
                             </tr>
                         <?php endforeach; ?>

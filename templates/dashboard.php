@@ -17,8 +17,8 @@ declare(strict_types=1);
     
     <?php foreach ($userAccounts as $account): ?>
         <div class="account-item">
-        <a href="?page=account&account_id=<?= htmlspecialchars($account->getId()) ?>">
-        <?= htmlspecialchars($account->getAccountType()) ?>
+        <a href="?page=account&account_id=<?= htmlspecialchars((string)$account->getId()) ?>">
+        <?= htmlspecialchars((string)$account->getAccountType()) ?>
         </a>
         </div>
     <?php endforeach; ?>

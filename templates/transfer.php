@@ -11,7 +11,7 @@
     <?php if ($selectedAccount): ?>
         
         <h2><?= htmlspecialchars($selectedAccount->getAccountType()) ?></h2>
-        <p>Balance: <?= htmlspecialchars($selectedAccount->getBalance()) ?> </p>
+        <p>Balance: <?= htmlspecialchars((string)$selectedAccount->getBalance()) ?> </p>
 
     <form method="post">
         <?= csrf_field() ?>
@@ -21,7 +21,7 @@
             <select name="to_account_id" id="">
                 <?php foreach ($userAccounts as $account):  ?>
                     <?php if ($account->getId() !== $selectedAccount->getId()): ?>
-                <option value="<?= htmlspecialchars($account->getId()) ?>"><?= htmlspecialchars($account->getAccountType()) ?></option>
+                <option value="<?= htmlspecialchars((string)$account->getId()) ?>"><?= htmlspecialchars($account->getAccountType()) ?></option>
                     <?php endif; ?>
                 <?php endforeach; ?>
             </select>

@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 require_login();
 require_role('admin');
 
@@ -26,7 +27,7 @@ require_role('admin');
                         <?php $users = $adminService->getAllUsers() ?? []; ?>
                         <?php foreach ($users as $user): ?>
                             <tr>
-                                <td><?= htmlspecialchars($user->getId()) ?></td>
+                                <td><?= htmlspecialchars((string)$user->getId()) ?></td>
                                 <td><?= htmlspecialchars($user->getName()) ?></td>
                                 <td><?= htmlspecialchars($user->getCardNumber()) ?></td>
                                 <td><?= htmlspecialchars($user->getRole()) ?></td>
