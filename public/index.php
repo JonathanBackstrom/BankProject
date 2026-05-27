@@ -187,6 +187,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST')
             $from_account_id = $selectedAccount->getId();
             $balance = (float) $selectedAccount->getBalance();
 
+            //validerar så att kontot stämmer överrens med userId, alltså att man bara kan överföra till sina egnan konton
             $validAccount = false;
             foreach ( $userAccounts as $account)
                 {
