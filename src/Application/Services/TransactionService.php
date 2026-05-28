@@ -23,7 +23,7 @@ class TransactionService
 
     public function withdraw(int $account_id, float $amount, float $balance)
     {
-        if ($balance < $amount)
+        if ($amount <= 0 || $balance < $amount)
         {
             return false;
         }
