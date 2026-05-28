@@ -33,7 +33,7 @@ class TransactionService
 
     public function transfer(int $from_account_id,int $to_account_id, float $amount, float $balance)
     {
-        if ($balance < $amount)
+        if ($amount <= 0 || $balance < $amount)
         {
             return false;
         }
